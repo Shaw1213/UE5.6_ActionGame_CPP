@@ -3,9 +3,12 @@
 
 #include "RougeCharacter.h"
 
+#include "Projectiles/RougeProjectileMagic.h"
 #include "EnhancedInputComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ARougeCharacter::ARougeCharacter()
@@ -21,6 +24,7 @@ ARougeCharacter::ARougeCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	
+	MuzzleSocketName = "Muzzle_01";
 }
 
 // Called when the game starts or when spawned
@@ -28,6 +32,22 @@ void ARougeCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+// Called to bind functionality to input
+void ARougeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	
+	// Binding Input Actions
+	UEnhancedInputComponent * EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+	EnhancedInput->BindAction(Input_Move, ETriggerEvent :: Triggered, this, &ARougeCharacter::Move );
+	
+	EnhancedInput->BindAction(Input_Look, ETriggerEvent :: Triggered, this, &ARougeCharacter::Look );
+	
+	EnhancedInput->BindAction(Input_PrimaryAttack, ETriggerEvent :: Triggered, this, &ARougeCharacter::PrimaryAttack );
+
 }
 
 void ARougeCharacter::Move(const FInputActionValue& InValue)
@@ -55,6 +75,37 @@ void ARougeCharacter::Look(const FInputActionInstance& InValue)
 	AddControllerYawInput(InputValue.X);
 }
 
+void ARougeCharacter::PrimaryAttack()
+{
+	
+	PlayAnimMontage(AttackMontage);
+	
+	FTimerHandle AttackTimerHandle;
+	
+	const float AttackDelayTime = 0.2f;
+	
+	UNiagaraFunctionLibrary::SpawnSystemAttached(CastingEffect, GetMesh(), MuzzleSocketName,
+		FVector::ZeroVector ,FRotator::ZeroRotator,EAttachLocation::Type::SnapToTarget, true);
+	
+	UGameplayStatics::PlaySound2D(this, CastingSound);
+	
+	GetWorldTimerManager().SetTimer(AttackTimerHandle,this, &ARougeCharacter::AttackTimerElapsed,AttackDelayTime);
+	
+}
+
+void ARougeCharacter::AttackTimerElapsed()
+{
+	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);;
+ 	FRotator SpawnRotation = GetControlRotation();
+ 	FActorSpawnParameters SpawnParams;
+ 	SpawnParams.Instigator = this;
+ 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; // Ensures the projectile spawns even if there's a collision
+ 
+ 	AActor* NewProjectile = GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+	
+	MoveIgnoreActorAdd(NewProjectile);
+}
+
 // Called every frame
 void ARougeCharacter::Tick(float DeltaTime)
 {
@@ -62,17 +113,5 @@ void ARougeCharacter::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void ARougeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
-	// Binding Input Actions
-	UEnhancedInputComponent * EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	
-	EnhancedInput->BindAction(Input_Move, ETriggerEvent :: Triggered, this, &ARougeCharacter::Move );
-	
-	EnhancedInput->BindAction(Input_Look, ETriggerEvent :: Triggered, this, &ARougeCharacter::Look );
 
-}
 

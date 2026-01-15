@@ -10,16 +10,23 @@ class UNiagaraSystem;
 class UProjectileMovementComponent;
 class USphereComponent;
 class UNiagaraComponent;
+class UAudioComponent;
 
-UCLASS()
+UCLASS(Abstract)
 class ACTIONROUGELIKE_API ARougeProjectileMagic : public AActor
 {
 	GENERATED_BODY()
 	
 protected:
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	TSubclassOf<UDamageType> DmgTypeClass = UDamageType::StaticClass();
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	TObjectPtr<UNiagaraSystem> ExplosionEffect;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Audio")
+	TObjectPtr<USoundBase> ExplosionSound;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<USphereComponent> SphereComponent;
@@ -29,6 +36,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<UNiagaraComponent> LoopedNiagaraComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<UAudioComponent> LoopedAudioComponent;
 	
 	UFUNCTION()
 	void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
