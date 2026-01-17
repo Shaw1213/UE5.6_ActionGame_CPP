@@ -8,6 +8,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -30,8 +31,8 @@ ARougeCharacter::ARougeCharacter()
 // Called when the game starts or when spawned
 void ARougeCharacter::BeginPlay()
 {
+	JumpMaxCount = JumpMaxCountNum; // Allow double jump
 	Super::BeginPlay();
-	
 }
 
 // Called to bind functionality to input
@@ -45,6 +46,10 @@ void ARougeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	EnhancedInput->BindAction(Input_Move, ETriggerEvent :: Triggered, this, &ARougeCharacter::Move );
 	
 	EnhancedInput->BindAction(Input_Look, ETriggerEvent :: Triggered, this, &ARougeCharacter::Look );
+	
+	EnhancedInput->BindAction(Input_Jump, ETriggerEvent :: Triggered, this, &ARougeCharacter::Jump );
+	
+	EnhancedInput->BindAction(Input_Jump,ETriggerEvent :: Completed, this, &ACharacter::StopJumping );
 	
 	EnhancedInput->BindAction(Input_PrimaryAttack, ETriggerEvent :: Triggered, this, &ARougeCharacter::PrimaryAttack );
 
@@ -104,6 +109,36 @@ void ARougeCharacter::AttackTimerElapsed()
  	AActor* NewProjectile = GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
 	
 	MoveIgnoreActorAdd(NewProjectile);
+}
+
+void ARougeCharacter::Jump()
+{
+	//First Jump
+	if (JumpCurrentCount == 0 && CanJump())
+	{
+		Super::Jump();
+	}
+	
+	//Second Jump - redirecting 
+	if (JumpCurrentCount == 1 && JumpCurrentCount < JumpMaxCount)
+	{
+		UCharacterMovementComponent * MovementComp = GetCharacterMovement();
+		
+		//Get last input direction 
+		FVector LastInput = MovementComp->GetLastInputVector();
+		
+		//Calculate new velocity
+		// Apply redirect
+		FVector NewVelocity;
+		NewVelocity.X = LastInput.X * AirRedirectionStrength;
+		NewVelocity.Y = LastInput.Y * AirRedirectionStrength;
+		NewVelocity.Z = DoubleJumpForce;
+        
+		MovementComp->Velocity = NewVelocity;
+        
+		bPressedJump = true;
+		JumpCurrentCount++;
+	}
 }
 
 // Called every frame

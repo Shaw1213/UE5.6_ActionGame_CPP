@@ -46,6 +46,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> Input_Look;
 	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	TObjectPtr<UInputAction> Input_Jump;
+	
 	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
 	TObjectPtr<UInputAction> Input_PrimaryAttack;
 	
@@ -66,6 +69,17 @@ protected:
 	void PrimaryAttack();
 	
 	void AttackTimerElapsed();
+	
+	void Jump() override;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	float DoubleJumpForce = 420.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	float AirRedirectionStrength = 420.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	int JumpMaxCountNum = 2;
 
 public:	
 	// Called every frame
