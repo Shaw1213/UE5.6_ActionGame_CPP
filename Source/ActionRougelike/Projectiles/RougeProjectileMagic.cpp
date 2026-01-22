@@ -2,7 +2,6 @@
 
 
 #include "RougeProjectileMagic.h"
-#include "RougeProjectileMagic.h"
 
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
