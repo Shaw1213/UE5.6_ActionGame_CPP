@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "RougeExplosiveBarrel.generated.h"
 
+class URadialForceComponent;
 class UNiagaraComponent;
 class UNiagaraSystem;
 
@@ -34,6 +35,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category="Audio")
 	TObjectPtr<UAudioComponent> ExplodeAudioComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Damage")
+	TObjectPtr<URadialForceComponent> RadialForceComp;
 	
 	FTimerHandle ExplosionTimerHandle;
 	

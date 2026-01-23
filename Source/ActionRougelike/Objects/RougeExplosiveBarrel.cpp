@@ -7,6 +7,7 @@
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 
 
 // Sets default values
@@ -14,7 +15,9 @@ ARougeExplosiveBarrel::ARougeExplosiveBarrel()
 {
 
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComp"));
+	StaticMeshComp->SetCollisionProfileName("PhysicsActor");
 	RootComponent = StaticMeshComp;
+	
 	
 	//Audio
 	BurningAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("BurningAudioComp"));
@@ -30,6 +33,14 @@ ARougeExplosiveBarrel::ARougeExplosiveBarrel()
 	LoopedBurningEffect->SetupAttachment(RootComponent);
 	LoopedBurningEffect->bAutoActivate = false;
 	ExplosionEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ExplosionEffect"));
+	
+	//Damage
+	RadialForceComp = CreateDefaultSubobject<URadialForceComponent>(TEXT("RadialForceComp"));
+	RadialForceComp->SetupAttachment(RootComponent);
+	RadialForceComp->bAutoActivate = false;
+	RadialForceComp->bIgnoreOwningActor = true; //ignore self
+	RadialForceComp->Radius = 750.f;
+	RadialForceComp->ImpulseStrength = 1500000.f;
 
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -60,8 +71,12 @@ void ARougeExplosiveBarrel::Explode()
 			);
 	}
 	
-	//TODO : Apply radial damage
+	//fire radial force
 	
+	if (RadialForceComp)
+	{
+		RadialForceComp->FireImpulse();
+	}
 	
 	Destroy();
 	
