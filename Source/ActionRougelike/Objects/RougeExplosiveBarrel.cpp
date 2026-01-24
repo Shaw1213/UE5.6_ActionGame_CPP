@@ -40,7 +40,7 @@ ARougeExplosiveBarrel::ARougeExplosiveBarrel()
 	RadialForceComp->bAutoActivate = false;
 	RadialForceComp->bIgnoreOwningActor = true; //ignore self
 	RadialForceComp->Radius = 750.f;
-	RadialForceComp->ImpulseStrength = 1500000.f;
+	RadialForceComp->ImpulseStrength = 150000.f;
 
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
