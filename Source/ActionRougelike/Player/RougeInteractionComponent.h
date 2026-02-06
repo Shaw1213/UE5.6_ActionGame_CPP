@@ -17,6 +17,9 @@ public:
 	URougeInteractionComponent();
 
 protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	float InteractionRadius = 800.f;
 
 public:
 	
