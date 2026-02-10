@@ -3,6 +3,8 @@
 
 #include "RougeItemChest.h"
 
+#include "DataWrappers/ChaosVDParticleDataWrapper.h"
+
 
 // Sets default values
 ARougeItemChest::ARougeItemChest()
@@ -12,6 +14,7 @@ ARougeItemChest::ARougeItemChest()
 	
 	BaseMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMeshComp"));
 	RootComponent = BaseMeshComponent;
+	BaseMeshComponent->SetCollisionProfileName("Interaction");
 	
 	LidMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LidMeshComp"));
 	LidMeshComponent->SetupAttachment(BaseMeshComponent);
@@ -33,7 +36,10 @@ void ARougeItemChest::Tick(float DeltaTime)
 	
 	if (FMath::IsNearlyEqual(CurrentLidPitch, TargetLidPitch))
 	{
+		//Animation is done, stop ticking
 		SetActorTickEnabled(false);
+		
+		ChestAnimationComplete();
 	}
 }
 

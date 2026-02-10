@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "RougeCharacter.generated.h"
+#include "RougePlayerCharacter.generated.h"
 
 class UNiagaraSystem;
 class ARougeProjectileMagic;
@@ -16,13 +16,13 @@ class UCameraComponent;
 class UAnimMontage;
 
 UCLASS()
-class ACTIONROUGELIKE_API ARougeCharacter : public ACharacter
+class ACTIONROUGELIKE_API ARougePlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	ARougeCharacter();
+	ARougePlayerCharacter();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")

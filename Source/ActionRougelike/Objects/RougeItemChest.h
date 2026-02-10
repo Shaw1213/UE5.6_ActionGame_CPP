@@ -27,6 +27,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	float OpenLidSpeed = 50.0f;
+	
+	UFUNCTION(BLueprintImplementableEvent)
+	void ChestAnimationComplete();
 
 public:
 	

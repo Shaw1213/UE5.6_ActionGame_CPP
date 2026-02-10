@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RougeCharacter.h"
+#include "RougePlayerCharacter.h"
 
 #include "Projectiles/RougeProjectileMagic.h"
 #include "EnhancedInputComponent.h"
@@ -12,7 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
-ARougeCharacter::ARougeCharacter()
+ARougePlayerCharacter::ARougePlayerCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -29,33 +29,33 @@ ARougeCharacter::ARougeCharacter()
 }
 
 // Called when the game starts or when spawned
-void ARougeCharacter::BeginPlay()
+void ARougePlayerCharacter::BeginPlay()
 {
 	JumpMaxCount = JumpMaxCountNum; // Allow double jump
 	Super::BeginPlay();
 }
 
 // Called to bind functionality to input
-void ARougeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ARougePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
 	// Binding Input Actions
 	UEnhancedInputComponent * EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
-	EnhancedInput->BindAction(Input_Move, ETriggerEvent :: Triggered, this, &ARougeCharacter::Move );
+	EnhancedInput->BindAction(Input_Move, ETriggerEvent :: Triggered, this, &ARougePlayerCharacter::Move );
 	
-	EnhancedInput->BindAction(Input_Look, ETriggerEvent :: Triggered, this, &ARougeCharacter::Look );
+	EnhancedInput->BindAction(Input_Look, ETriggerEvent :: Triggered, this, &ARougePlayerCharacter::Look );
 	
-	EnhancedInput->BindAction(Input_Jump, ETriggerEvent :: Triggered, this, &ARougeCharacter::Jump );
+	EnhancedInput->BindAction(Input_Jump, ETriggerEvent :: Triggered, this, &ARougePlayerCharacter::Jump );
 	
 	EnhancedInput->BindAction(Input_Jump,ETriggerEvent :: Completed, this, &ACharacter::StopJumping );
 	
-	EnhancedInput->BindAction(Input_PrimaryAttack, ETriggerEvent :: Triggered, this, &ARougeCharacter::PrimaryAttack );
+	EnhancedInput->BindAction(Input_PrimaryAttack, ETriggerEvent :: Triggered, this, &ARougePlayerCharacter::PrimaryAttack );
 
 }
 
-void ARougeCharacter::Move(const FInputActionValue& InValue)
+void ARougePlayerCharacter::Move(const FInputActionValue& InValue)
 {
 	FVector2d InputValue = InValue.Get<FVector2d>();
 	
@@ -72,7 +72,7 @@ void ARougeCharacter::Move(const FInputActionValue& InValue)
 	AddMovementInput(RightDirection, InputValue.Y);
 }
 
-void ARougeCharacter::Look(const FInputActionInstance& InValue)
+void ARougePlayerCharacter::Look(const FInputActionInstance& InValue)
 {
 	FVector2d InputValue = InValue.GetValue().Get<FVector2d>();
 	
@@ -80,7 +80,7 @@ void ARougeCharacter::Look(const FInputActionInstance& InValue)
 	AddControllerYawInput(InputValue.X);
 }
 
-void ARougeCharacter::PrimaryAttack()
+void ARougePlayerCharacter::PrimaryAttack()
 {
 	
 	PlayAnimMontage(AttackMontage);
@@ -94,11 +94,11 @@ void ARougeCharacter::PrimaryAttack()
 	
 	UGameplayStatics::PlaySound2D(this, CastingSound);
 	
-	GetWorldTimerManager().SetTimer(AttackTimerHandle,this, &ARougeCharacter::AttackTimerElapsed,AttackDelayTime);
+	GetWorldTimerManager().SetTimer(AttackTimerHandle,this, &ARougePlayerCharacter::AttackTimerElapsed,AttackDelayTime);
 	
 }
 
-void ARougeCharacter::AttackTimerElapsed()
+void ARougePlayerCharacter::AttackTimerElapsed()
 {
 	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);;
  	FRotator SpawnRotation = GetControlRotation();
@@ -111,7 +111,7 @@ void ARougeCharacter::AttackTimerElapsed()
 	MoveIgnoreActorAdd(NewProjectile);
 }
 
-void ARougeCharacter::Jump()
+void ARougePlayerCharacter::Jump()
 {
 	//First Jump
 	if (JumpCurrentCount == 0 && CanJump())
@@ -142,7 +142,7 @@ void ARougeCharacter::Jump()
 }
 
 // Called every frame
-void ARougeCharacter::Tick(float DeltaTime)
+void ARougePlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
