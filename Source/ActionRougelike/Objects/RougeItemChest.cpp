@@ -3,8 +3,6 @@
 
 #include "RougeItemChest.h"
 
-#include "DataWrappers/ChaosVDParticleDataWrapper.h"
-
 
 // Sets default values
 ARougeItemChest::ARougeItemChest()
@@ -20,7 +18,7 @@ ARougeItemChest::ARougeItemChest()
 	LidMeshComponent->SetupAttachment(BaseMeshComponent);
 }
 
-void ARougeItemChest::Interact()
+void ARougeItemChest::Interact_Implementation()
 {
 	//play open animation
 	SetActorTickEnabled(true);

@@ -18,11 +18,13 @@ URougeInteractionComponent::URougeInteractionComponent()
 
 void URougeInteractionComponent::Interact()
  {
-	IRougeInteractionInterface* InteractionInterface = Cast<IRougeInteractionInterface>(SelectedActor);
+	/*IRougeInteractionInterface* InteractionInterface = Cast<IRougeInteractionInterface>(SelectedActor);
 	if (InteractionInterface)
 	{
 		InteractionInterface->Interact();
-	}
+	}*/
+	
+	IRougeInteractionInterface::Execute_Interact(SelectedActor);
  }
 
 void URougeInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,FActorComponentTickFunction* ThisTickFunction)

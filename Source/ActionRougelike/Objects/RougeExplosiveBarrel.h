@@ -41,6 +41,7 @@ protected:
 	
 	FTimerHandle ExplosionTimerHandle;
 	
+	UFUNCTION(BlueprintCallable)
 	void Explode();
 	
 	void StartBurning();

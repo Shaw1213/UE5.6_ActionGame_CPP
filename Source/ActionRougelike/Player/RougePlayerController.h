@@ -31,5 +31,4 @@ protected:
 public:
 	
 	ARougePlayerController();
-	
 };
