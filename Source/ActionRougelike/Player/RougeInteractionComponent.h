@@ -12,16 +12,19 @@ class ACTIONROUGELIKE_API URougeInteractionComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this component's properties
-	URougeInteractionComponent();
-
 protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
 	float InteractionRadius = 800.f;
+	
+	UPROPERTY()
+	TObjectPtr<AActor> SelectedActor;
 
 public:
+	
+	void Interact();
+	
+	URougeInteractionComponent();
 	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,FActorComponentTickFunction* ThisTickFunction) override;
 };

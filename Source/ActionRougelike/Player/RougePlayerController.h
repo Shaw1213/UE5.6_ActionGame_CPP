@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "RougePlayerController.generated.h"
 
+class UInputAction;
 class URougeInteractionComponent;
 /**
  * 
@@ -19,6 +20,13 @@ protected:
 		
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<URougeInteractionComponent> InteractionComp;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> Input_Interact;
+	
+	void StartInteract();
+	
+	virtual void SetupInputComponent() override;
 	
 public:
 	

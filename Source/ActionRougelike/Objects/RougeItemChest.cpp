@@ -7,20 +7,33 @@
 // Sets default values
 ARougeItemChest::ARougeItemChest()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-}
-
-// Called when the game starts or when spawned
-void ARougeItemChest::BeginPlay()
-{
-	Super::BeginPlay();
+	PrimaryActorTick.bStartWithTickEnabled = false;
 	
+	BaseMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMeshComp"));
+	RootComponent = BaseMeshComponent;
+	
+	LidMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LidMeshComp"));
+	LidMeshComponent->SetupAttachment(BaseMeshComponent);
 }
 
-// Called every frame
+void ARougeItemChest::Interact()
+{
+	//play open animation
+	SetActorTickEnabled(true);
+}
+
 void ARougeItemChest::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	CurrentLidPitch = FMath::FInterpConstantTo(CurrentLidPitch, TargetLidPitch, DeltaTime, OpenLidSpeed);
+	
+	LidMeshComponent->SetRelativeRotation(FRotator(CurrentLidPitch, 0.0f, 0.0f));
+	
+	if (FMath::IsNearlyEqual(CurrentLidPitch, TargetLidPitch))
+	{
+		SetActorTickEnabled(false);
+	}
 }
 

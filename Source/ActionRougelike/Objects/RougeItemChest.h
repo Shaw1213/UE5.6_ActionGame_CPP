@@ -3,23 +3,36 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/RougeInteractionInterface.h"
 #include "GameFramework/Actor.h"
 #include "RougeItemChest.generated.h"
 
 UCLASS()
-class ACTIONROUGELIKE_API ARougeItemChest : public AActor
+class ACTIONROUGELIKE_API ARougeItemChest : public AActor, public IRougeInteractionInterface
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this actor's properties
-	ARougeItemChest();
-
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<UStaticMeshComponent> BaseMeshComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<UStaticMeshComponent> LidMeshComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	float CurrentLidPitch = 0.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	float TargetLidPitch = 120.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	float OpenLidSpeed = 50.0f;
 
 public:
-	// Called every frame
+	
+	virtual void Interact() override;
+	
 	virtual void Tick(float DeltaTime) override;
+	
+	ARougeItemChest();
 };

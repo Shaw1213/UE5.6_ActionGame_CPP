@@ -2,6 +2,8 @@
 
 
 #include "RougeInteractionComponent.h"
+
+#include "Core/RougeInteractionInterface.h"
 #include "Engine/OverlapResult.h"
 
 
@@ -12,6 +14,16 @@ URougeInteractionComponent::URougeInteractionComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 }
+
+void URougeInteractionComponent::Interact()
+ {
+	IRougeInteractionInterface* InteractionInterface = Cast<IRougeInteractionInterface>(SelectedActor);
+	if (InteractionInterface)
+	{
+		InteractionInterface->Interact();
+	}
+ }
+
 void URougeInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -30,8 +42,6 @@ void URougeInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	
 	GetWorld()->OverlapMultiByChannel(Overlaps, Center, FQuat::Identity, CollisionChannel, Shape);
 	
-	DrawDebugSphere(GetWorld(), Center, InteractionRadius, 32, FColor::White);
-	
 	AActor* BestActor = nullptr;
 	float HighestDot = -1.0;
 	
@@ -39,26 +49,28 @@ void URougeInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	{	
 		FVector OverlapLocation = Overlap.GetActor()->GetActorLocation();
 		
-		DrawDebugBox(GetWorld(),OverlapLocation, FVector(50.f), FColor::Red);
-		
 		FVector OverlapDirection = (OverlapLocation-Center).GetSafeNormal();
 		
 		float DotResult = FVector::DotProduct(OverlapDirection,PC->GetControlRotation().Vector());
-		
-		FString DebugString = FString::Printf(TEXT("Dot: %f"), DotResult);
-		
-		DrawDebugString(GetWorld(),OverlapLocation, DebugString, nullptr, FColor::White, 0.0f, true);
-		
 		if (DotResult > HighestDot)
 		{
 			BestActor = Overlap.GetActor();
 			HighestDot = DotResult;
 		}
+		
+		//Debug Draw
+		DrawDebugBox(GetWorld(),OverlapLocation, FVector(50.f), FColor::Red);
+        FString DebugString = FString::Printf(TEXT("Dot: %f"), DotResult);
+        DrawDebugString(GetWorld(),OverlapLocation, DebugString, nullptr, FColor::White, 0.0f, true);
 	}
+	
+	SelectedActor = BestActor;
 	
 	if (BestActor)
 	{
 		DrawDebugBox(GetWorld(),BestActor->GetActorLocation(), FVector(60.f), FColor::Green);
 	}
+	
+	DrawDebugSphere(GetWorld(), Center, InteractionRadius, 32, FColor::White);
 }
 
