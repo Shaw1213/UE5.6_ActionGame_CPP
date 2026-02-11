@@ -7,16 +7,10 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 ARougeProjectileMagic::ARougeProjectileMagic()
 {
-	
-	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
-	RootComponent = SphereComponent;
-	SphereComponent->SetSphereRadius(16.0f);
-	SphereComponent->SetCollisionProfileName("Projectile");
 	
 	LoopedNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("LoopedNiagaraComp"));
 	LoopedNiagaraComponent->SetupAttachment(SphereComponent);
@@ -24,10 +18,6 @@ ARougeProjectileMagic::ARougeProjectileMagic()
 	LoopedAudioComponent  = CreateDefaultSubobject<UAudioComponent>(TEXT("LoopedSoundComp"));
 	LoopedAudioComponent->SetupAttachment(SphereComponent);
 	
-	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComp"));
-	ProjectileMovementComponent->InitialSpeed = 1000.f;
-	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
-
 }
 
 // Called when the game starts or when spawned

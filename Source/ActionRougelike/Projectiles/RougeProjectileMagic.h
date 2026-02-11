@@ -3,17 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "RougeProjectile.h"
 #include "RougeProjectileMagic.generated.h"
 
 class UNiagaraSystem;
-class UProjectileMovementComponent;
-class USphereComponent;
 class UNiagaraComponent;
 class UAudioComponent;
 
 UCLASS(Abstract)
-class ACTIONROUGELIKE_API ARougeProjectileMagic : public AActor
+class ACTIONROUGELIKE_API ARougeProjectileMagic : public ARougeProjectile
 {
 	GENERATED_BODY()
 	
@@ -27,12 +25,6 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Audio")
 	TObjectPtr<USoundBase> ExplosionSound;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<USphereComponent> SphereComponent;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<UNiagaraComponent> LoopedNiagaraComponent;
