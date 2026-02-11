@@ -12,15 +12,7 @@ class ACTIONROUGELIKE_API ARougeProjectileBlackhole : public ARougeProjectile
 {
 	GENERATED_BODY()
 
+
 public:
-	// Sets default values for this actor's properties
 	ARougeProjectileBlackhole();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 };

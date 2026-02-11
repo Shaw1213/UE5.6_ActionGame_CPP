@@ -4,6 +4,8 @@
 #include "RougePlayerCharacter.h"
 
 #include "Projectiles/RougeProjectileMagic.h"
+#include "Projectiles/RougeProjectileBlackhole.h"
+#include "Projectiles/RougeProjectileTeleport.h"
 #include "EnhancedInputComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
@@ -52,6 +54,10 @@ void ARougePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	EnhancedInput->BindAction(Input_Jump,ETriggerEvent :: Completed, this, &ACharacter::StopJumping );
 	
 	EnhancedInput->BindAction(Input_PrimaryAttack, ETriggerEvent :: Triggered, this, &ARougePlayerCharacter::PrimaryAttack );
+	
+	EnhancedInput->BindAction(Input_BlackHoleAttack, ETriggerEvent :: Triggered, this, &ARougePlayerCharacter::BlackHoleAttack );
+	
+	EnhancedInput->BindAction(Input_TeleportAttack, ETriggerEvent :: Triggered, this, &ARougePlayerCharacter::TeleportAttack );
 
 }
 
@@ -82,6 +88,44 @@ void ARougePlayerCharacter::Look(const FInputActionInstance& InValue)
 
 void ARougePlayerCharacter::PrimaryAttack()
 {
+	CurrentProjectile = ProjectileClass;
+	PlayAnimMontage(AttackMontage);
+	
+	FTimerHandle AttackTimerHandle;
+	
+	const float AttackDelayTime = 0.2f;
+	
+	UNiagaraFunctionLibrary::SpawnSystemAttached(CastingEffect, GetMesh(), MuzzleSocketName,
+		FVector::ZeroVector ,FRotator::ZeroRotator,EAttachLocation::Type::SnapToTarget, true);
+	
+	UGameplayStatics::PlaySound2D(this, CastingSound);
+	
+	GetWorldTimerManager().SetTimer(AttackTimerHandle,this, &ARougePlayerCharacter::AttackTimerElapsed,AttackDelayTime);
+	
+}
+
+void ARougePlayerCharacter::BlackHoleAttack()
+{
+	CurrentProjectile = ProjectileClassBlackhole;
+	
+	PlayAnimMontage(AttackMontage);
+	
+	FTimerHandle AttackTimerHandle;
+	
+	const float AttackDelayTime = 0.2f;
+	
+	UNiagaraFunctionLibrary::SpawnSystemAttached(CastingEffect, GetMesh(), MuzzleSocketName,
+		FVector::ZeroVector ,FRotator::ZeroRotator,EAttachLocation::Type::SnapToTarget, true);
+	
+	UGameplayStatics::PlaySound2D(this, CastingSound);
+	
+	GetWorldTimerManager().SetTimer(AttackTimerHandle,this, &ARougePlayerCharacter::AttackTimerElapsed,AttackDelayTime);
+	
+}
+
+void ARougePlayerCharacter::TeleportAttack()
+{
+	CurrentProjectile = ProjectileClassTeleport;
 	
 	PlayAnimMontage(AttackMontage);
 	
@@ -106,10 +150,11 @@ void ARougePlayerCharacter::AttackTimerElapsed()
  	SpawnParams.Instigator = this;
  	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; // Ensures the projectile spawns even if there's a collision
  
- 	AActor* NewProjectile = GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+ 	AActor* NewProjectile = GetWorld()->SpawnActor<AActor>(CurrentProjectile, SpawnLocation, SpawnRotation, SpawnParams);
 	
 	MoveIgnoreActorAdd(NewProjectile);
 }
+
 
 void ARougePlayerCharacter::Jump()
 {

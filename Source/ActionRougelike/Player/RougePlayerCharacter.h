@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "RougePlayerCharacter.generated.h"
 
+class ARougeProjectileTeleport;
+class ARougeProjectileBlackhole;
 class UNiagaraSystem;
 class ARougeProjectileMagic;
 struct FInputActionInstance;
@@ -25,6 +27,10 @@ public:
 	ARougePlayerCharacter();
 
 protected:
+	
+	UPROPERTY()
+	TSubclassOf<AActor> CurrentProjectile;
+	//--------------------------------------------------------------
 	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
 	TObjectPtr<USoundBase> CastingSound;
 	
@@ -40,6 +46,24 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
 	TSubclassOf<ARougeProjectileMagic> ProjectileClass;
 	
+	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
+	TObjectPtr<UInputAction> Input_PrimaryAttack;
+	
+	//--------------------------------------------------------------
+	UPROPERTY(EditDefaultsOnly, Category="BlackHoleAttack")
+	TObjectPtr<UInputAction> Input_BlackHoleAttack;
+	
+	UPROPERTY(EditDefaultsOnly, Category="BlackHoleAttack")
+	TSubclassOf<ARougeProjectileBlackhole> ProjectileClassBlackhole;
+	
+	//--------------------------------------------------------------
+	UPROPERTY(EditDefaultsOnly, Category="TeleportAttack")
+	TObjectPtr<UInputAction> Input_TeleportAttack;
+	
+	UPROPERTY(EditDefaultsOnly, Category="TeleportAttack")
+	TSubclassOf<ARougeProjectileTeleport> ProjectileClassTeleport;
+	
+	//--------------------------------------------------------------
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> Input_Move;
 	
@@ -48,9 +72,6 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> Input_Jump;
-	
-	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
-	TObjectPtr<UInputAction> Input_PrimaryAttack;
 	
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	TObjectPtr<UCameraComponent> CameraComponent;
@@ -68,7 +89,11 @@ protected:
 	
 	void PrimaryAttack();
 	
+	void BlackHoleAttack();
+	
 	void AttackTimerElapsed();
+	
+	void TeleportAttack();
 	
 	void Jump() override;
 	
