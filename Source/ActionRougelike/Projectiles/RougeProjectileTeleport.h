@@ -7,20 +7,19 @@
 #include "GameFramework/Actor.h"
 #include "RougeProjectileTeleport.generated.h"
 
+class UNiagaraComponent;
+
 UCLASS()
 class ACTIONROUGELIKE_API ARougeProjectileTeleport : public ARougeProjectile
 {
 	GENERATED_BODY()
-
+	
+protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<UNiagaraComponent> LoopedNiagaraComponent;
+	
 public:
-	// Sets default values for this actor's properties
 	ARougeProjectileTeleport();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 };

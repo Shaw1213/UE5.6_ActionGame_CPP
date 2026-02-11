@@ -7,11 +7,16 @@
 #include "GameFramework/Actor.h"
 #include "RougeProjectileBlackhole.generated.h"
 
+class UNiagaraComponent;
+
 UCLASS()
 class ACTIONROUGELIKE_API ARougeProjectileBlackhole : public ARougeProjectile
 {
 	GENERATED_BODY()
-
+protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<UNiagaraComponent> LoopedNiagaraComponent;
 
 public:
 	ARougeProjectileBlackhole();

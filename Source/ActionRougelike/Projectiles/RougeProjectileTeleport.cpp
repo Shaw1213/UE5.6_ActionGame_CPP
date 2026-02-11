@@ -2,25 +2,16 @@
 
 
 #include "RougeProjectileTeleport.h"
+#include "Components/SphereComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 
-// Sets default values
+
 ARougeProjectileTeleport::ARougeProjectileTeleport()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-}
+	LoopedNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("LoopedNiagaraComp"));
+	LoopedNiagaraComponent->SetupAttachment(SphereComponent);
 
-// Called when the game starts or when spawned
-void ARougeProjectileTeleport::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ARougeProjectileTeleport::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
