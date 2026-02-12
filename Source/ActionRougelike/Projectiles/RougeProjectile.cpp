@@ -20,7 +20,14 @@ ARougeProjectile::ARougeProjectile()
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComp"));
 	ProjectileMovementComponent->InitialSpeed = 1000.f;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
-	
+
+}
+
+void ARougeProjectile::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true);
 }
 
 

@@ -5,7 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
-
+#include "Kismet/GameplayStatics.h"
 
 
 ARougeProjectileTeleport::ARougeProjectileTeleport()
@@ -13,5 +13,10 @@ ARougeProjectileTeleport::ARougeProjectileTeleport()
 	LoopedNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("LoopedNiagaraComp"));
 	LoopedNiagaraComponent->SetupAttachment(SphereComponent);
 
+}
+
+void ARougeProjectileTeleport::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
 }
 

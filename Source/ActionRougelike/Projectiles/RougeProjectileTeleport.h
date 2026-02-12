@@ -19,7 +19,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<UNiagaraComponent> LoopedNiagaraComponent;
 	
+
 public:
 	ARougeProjectileTeleport();
+	
+	virtual void PostInitializeComponents() override;
+
 
 };

@@ -24,4 +24,6 @@ protected:
 
 public:
 	ARougeProjectile();
+
+	virtual void PostInitializeComponents() override;
 };

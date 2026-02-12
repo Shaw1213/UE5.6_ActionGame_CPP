@@ -20,14 +20,11 @@ ARougeProjectileMagic::ARougeProjectileMagic()
 	
 }
 
-// Called when the game starts or when spawned
 void ARougeProjectileMagic::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	
-	SphereComponent->OnComponentHit.AddDynamic(this, &ARougeProjectileMagic::OnActorHit );
-	
-	SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true);// Ignore the actor that spawned this projectile
+
+	SphereComponent->OnComponentHit.AddDynamic(this, &ARougeProjectileMagic::OnActorHit);
 }
 
 // Called when projectile hits something
