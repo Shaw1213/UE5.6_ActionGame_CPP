@@ -8,6 +8,7 @@
 #include "Projectiles/RougeProjectileTeleport.h"
 #include "EnhancedInputComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "ActionSystem/RougeActionSystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -26,8 +27,20 @@ ARougePlayerCharacter::ARougePlayerCharacter()
 	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
-	
+
+	ActionSystemComponent = CreateDefaultSubobject<URougeActionSystemComponent>(TEXT("ActionSystemComponent"));
+
 	MuzzleSocketName = "Muzzle_01";
+}
+
+float ARougePlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
+	class AController* EventInstigator, AActor* DamageCauser)
+{
+	float ActualDamage =  Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	
+	ActionSystemComponent->ApplyHealthChange(-ActualDamage);
+	
+	return ActualDamage;
 }
 
 // Called when the game starts or when spawned

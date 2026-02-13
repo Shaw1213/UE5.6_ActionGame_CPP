@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "RougePlayerCharacter.generated.h"
 
+class URougeActionSystemComponent;
 class ARougeProjectileTeleport;
 class ARougeProjectileBlackhole;
 class UNiagaraSystem;
@@ -30,6 +31,12 @@ protected:
 	
 	UPROPERTY()
 	TSubclassOf<AActor> CurrentProjectile;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Component")
+	TObjectPtr<URougeActionSystemComponent> ActionSystemComponent;
+	
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override; 
+	
 	//--------------------------------------------------------------
 	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
 	TObjectPtr<USoundBase> CastingSound;
