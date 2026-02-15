@@ -10,7 +10,16 @@ URougeActionSystemComponent::URougeActionSystemComponent()
 
 void URougeActionSystemComponent::ApplyHealthChange(float InValueChange)
 {
-	Attributes.Health += InValueChange;
+	float OldHealth = Attributes.Health;
 	
-	UE_LOG(LogTemp, Log, TEXT("New Health: %f"), Attributes.Health);
+	float MaxHealth = GetDefault<URougeActionSystemComponent>()->Attributes.Health;
+	
+	Attributes.Health = FMath::Clamp(Attributes.Health + InValueChange, 0.0f, MaxHealth);
+	
+	if (!FMath::IsNearlyEqual(OldHealth, Attributes.Health))
+	{
+		OnHealthChanged.Broadcast(Attributes.Health, OldHealth);
+	}
+	
+	UE_LOG(LogTemp, Log, TEXT("New Health: %f , MaxHealth: %f"), Attributes.Health, MaxHealth);
 }

@@ -37,6 +37,9 @@ protected:
 	
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override; 
 	
+	UPROPERTY(EditDefaultsOnly, Category="Death")
+	TObjectPtr<UAnimMontage> DeathMontage;
+	
 	//--------------------------------------------------------------
 	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
 	TObjectPtr<USoundBase> CastingSound;
@@ -102,7 +105,10 @@ protected:
 	
 	void TeleportAttack();
 	
-	void Jump() override;
+	virtual void Jump() override;
+	
+	UFUNCTION()
+	void OnHealthChanged(float NewHealth, float OldHealth);
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	float DoubleJumpForce = 420.f;
@@ -114,8 +120,7 @@ protected:
 	int JumpMaxCountNum = 2;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void PostInitializeComponents() override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

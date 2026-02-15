@@ -33,6 +33,20 @@ ARougePlayerCharacter::ARougePlayerCharacter()
 	MuzzleSocketName = "Muzzle_01";
 }
 
+void ARougePlayerCharacter::BeginPlay()
+{
+	JumpMaxCount = JumpMaxCountNum; // Allow double jump
+	Super::BeginPlay();
+}
+
+
+void ARougePlayerCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	
+	ActionSystemComponent->OnHealthChanged.AddDynamic(this, &ARougePlayerCharacter::OnHealthChanged);
+}
+
 float ARougePlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
 	class AController* EventInstigator, AActor* DamageCauser)
 {
@@ -43,12 +57,7 @@ float ARougePlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent 
 	return ActualDamage;
 }
 
-// Called when the game starts or when spawned
-void ARougePlayerCharacter::BeginPlay()
-{
-	JumpMaxCount = JumpMaxCountNum; // Allow double jump
-	Super::BeginPlay();
-}
+
 
 // Called to bind functionality to input
 void ARougePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -199,12 +208,20 @@ void ARougePlayerCharacter::Jump()
 	}
 }
 
-// Called every frame
-void ARougePlayerCharacter::Tick(float DeltaTime)
+void ARougePlayerCharacter::OnHealthChanged(float NewHealth, float OldHealth)
 {
-	Super::Tick(DeltaTime);
-
+	//death logic
+	if (FMath::IsNearlyZero(NewHealth))
+	{
+		DisableInput(nullptr);
+		
+		GetMovementComponent()->StopMovementImmediately();
+		
+		PlayAnimMontage(DeathMontage);
+	}
+	
 }
+
 
 
 

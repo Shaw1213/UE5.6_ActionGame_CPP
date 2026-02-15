@@ -19,6 +19,8 @@ struct FRougeAttributeSet
 	float Health;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, NewHealth, float, OldHealth);
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTIONROUGELIKE_API URougeActionSystemComponent : public UActorComponent
 {
@@ -30,6 +32,10 @@ protected:
 	FRougeAttributeSet Attributes;
 
 public:
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthChanged OnHealthChanged;
+	
 	void ApplyHealthChange(float InValueChange);
 	
 	URougeActionSystemComponent();
